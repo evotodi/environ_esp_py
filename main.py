@@ -7,7 +7,7 @@ def connectToWifiAndUpdate():
     time.sleep(1)
     print('Memory free', gc.mem_free())
 
-    from app.ota_updater import OTAUpdater
+    from app.ota_updater.ota_updater import OTAUpdater
 
     # noinspection PyUnresolvedReferences
     sta_if = network.WLAN(network.STA_IF)
