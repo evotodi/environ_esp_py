@@ -1,5 +1,3 @@
-
-
 def connectToWifiAndUpdate():
     import time
     import machine
@@ -11,6 +9,7 @@ def connectToWifiAndUpdate():
 
     from app.ota_updater import OTAUpdater
 
+    # noinspection PyUnresolvedReferences
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
         print('connecting to network...')
@@ -19,7 +18,7 @@ def connectToWifiAndUpdate():
         while not sta_if.isconnected():
             pass
     print('network config:', sta_if.ifconfig())
-    otaUpdater = OTAUpdater('https://github.com/rdehuyss/micropython-ota-updater', main_dir='app', secrets_file="secrets.py")
+    otaUpdater = OTAUpdater('https://github.com/evotodi/environ_esp_py', main_dir='app', secrets_file="secrets.py", unstableVersions=True)
     hasUpdated = otaUpdater.install_update_if_available()
     if hasUpdated:
         machine.reset()
@@ -28,6 +27,7 @@ def connectToWifiAndUpdate():
         gc.collect()
 
 def startApp():
+    # noinspection PyUnresolvedReferences
     import app.start
 
 

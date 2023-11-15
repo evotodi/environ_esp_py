@@ -9,7 +9,9 @@ class OTAUpdater:
     optimized for low power usage.
     """
 
-    def __init__(self, github_repo, github_src_dir='', module='', main_dir='main', new_version_dir='next', unstableVersions=False, secrets_file=None, headers={}):
+    def __init__(self, github_repo, github_src_dir='', module='', main_dir='main', new_version_dir='next', unstableVersions=False, secrets_file=None, headers=None):
+        if headers is None:
+            headers = {}
         self.http_client = HttpClient(headers=headers)
         self.github_repo = github_repo.rstrip(
             '/').replace('https://github.com/', '')
@@ -95,6 +97,7 @@ class OTAUpdater:
     @staticmethod
     def _using_network(ssid, password):
         import network
+        # noinspection PyUnresolvedReferences
         sta_if = network.WLAN(network.STA_IF)
         if not sta_if.isconnected():
             print('connecting to network...')
@@ -111,7 +114,7 @@ class OTAUpdater:
         print('Checking version... ')
         print('\tCurrent version: ', current_version)
         print('\tLatest version: ', latest_version)
-        return (current_version, latest_version)
+        return current_version, latest_version
 
     def _create_new_version_file(self, latest_version):
         self.mkdir(self.modulepath(self.new_version_dir))
@@ -127,10 +130,10 @@ class OTAUpdater:
         return '0.0'
 
     def get_latest_version(self):
-        latest_release = self.http_client.get(
-            'https://api.github.com/repos/{}/releases'.format(self.github_repo))
-        version = [x['tag_name'] for x in latest_release.json() if (x['tag_name'].startswith(
-            'v') and self.unstableVersions) or x['tag_name'].startswith('r')][0]
+        latest_release = self.http_client.get('https://api.github.com/repos/{}/releases'.format(self.github_repo))
+        latest_release_json = latest_release.json()
+        print(latest_release_json)
+        version = [x['tag_name'] for x in latest_release_json if (x['tag_name'].startswith('v') and self.unstableVersions) or x['tag_name'].startswith('r')][0]
         latest_release.close()
         return version
 

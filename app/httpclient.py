@@ -50,13 +50,18 @@ class Response:
 
 class HttpClient:
 
-    def __init__(self, headers={}):
+    def __init__(self, headers=None):
+        if headers is None:
+            headers = {}
         self._headers = headers
 
+    @staticmethod
     def is_chunked_data(data):
         return getattr(data, "__iter__", None) and not getattr(data, "__len__", None)
 
-    def request(self, method, url, data=None, json=None, file=None, custom=None, saveToFile=None, headers={}, stream=None):
+    def request(self, method, url, data=None, json=None, file=None, custom=None, saveToFile=None, headers=None, stream=None):
+        if headers is None:
+            headers = {}
         chunked = data and self.is_chunked_data(data)
         redirect = None  # redirection url, None means no redirection
 
