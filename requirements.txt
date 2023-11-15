@@ -1,0 +1,1 @@
+-e git+https://github.com/gpm-robotics/micropython-ota-updater.git#egg=micropython-ota-updater
